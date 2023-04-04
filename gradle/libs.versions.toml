@@ -1,0 +1,24 @@
+[versions]
+kotlin = "1.8.20"
+ktor = "2.2.4"
+ksp = "1.8.0-1.0.9"
+logback = "1.4.6"
+
+
+[libraries]
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-common = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor" }
+ktor-server-status-page = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
+ktor-server-logging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-serialization = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor" }
+ktor-logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+ktor-test-server = { module = "io.ktor:ktor-server-tests", version.ref = "ktor" }
+ktor-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+
+
+[plugins]
+ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

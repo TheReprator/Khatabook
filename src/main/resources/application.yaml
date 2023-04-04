@@ -1,0 +1,16 @@
+ktor:
+  development: true
+  deployment:
+    port: 8080
+    shutdown:
+      url: "/shutdown"
+  application:
+    modules:
+      - dev.reprator.ApplicationKt.module
+
+
+jwt:
+  secret: "secret"
+  issuer: "http://0.0.0.0:8080/"
+  audience: "http://0.0.0.0:8080/hello"
+  realm: "Access to 'hello'"
