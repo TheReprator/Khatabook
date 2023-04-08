@@ -20,6 +20,16 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.config.yaml)
     implementation(libs.ktor.logback)
+
+    implementation(libs.kodein.mvc)
+
+    runtimeOnly("org.postgresql:postgresql:42.6.0")
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.hikariCp)
+    implementation(libs.exposed.encache)
+
     testImplementation(libs.ktor.test.server)
     testImplementation(libs.ktor.test.junit)
 }
