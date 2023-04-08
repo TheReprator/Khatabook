@@ -10,10 +10,15 @@ class DAOLanguageFacadeCacheImpl(
     private val delegate: DAOLanguageFacade,
     storagePath: File
 ) : DAOLanguageFacade {
+
+    companion object {
+        private const val CACHE_LANGUAGE = "cacheLanguage"
+    }
+
     private val cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
         .with(CacheManagerPersistenceConfiguration(storagePath))
         .withCache(
-            "articlesCache",
+            CACHE_LANGUAGE,
             CacheConfigurationBuilder.newCacheConfigurationBuilder(
                 Int::class.javaObjectType,
                 LanguageModal::class.java,
@@ -25,27 +30,27 @@ class DAOLanguageFacadeCacheImpl(
         )
         .build(true)
 
-    private val articlesCache = cacheManager.getCache("articlesCache", Int::class.javaObjectType, LanguageModal::class.java)
+    private val cacheLanguage = cacheManager.getCache(CACHE_LANGUAGE, Int::class.javaObjectType, LanguageModal::class.java)
 
     override suspend fun allLanguage(): List<LanguageModal> =
         delegate.allLanguage()
 
     override suspend fun language(id: Int): LanguageModal? =
-        articlesCache[id]
+        cacheLanguage[id]
             ?: delegate.language(id)
-                .also { article -> articlesCache.put(id, article) }
+                .also { article -> cacheLanguage.put(id, article) }
 
     override suspend fun addNewLanguage(name: String): LanguageModal? =
         delegate.addNewLanguage(name)
-            ?.also { article -> articlesCache.put(article.id, article) }
+            ?.also { article -> cacheLanguage.put(article.id, article) }
 
     override suspend fun editLanguage(id: Int, name: String): Boolean {
-        articlesCache.put(id, LanguageModal(id, name))
+        cacheLanguage.put(id, LanguageModal(id, name))
         return delegate.editLanguage(id, name)
     }
 
     override suspend fun deleteLanguage(id: Int): Boolean {
-        articlesCache.remove(id)
+        cacheLanguage.remove(id)
         return delegate.deleteLanguage(id)
     }
 

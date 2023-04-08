@@ -4,6 +4,7 @@ ktor = "2.2.4"
 ksp = "1.8.0-1.0.9"
 logback = "1.4.6"
 exposedVersion = "0.41.1"
+koin = "3.4.0"
 
 [libraries]
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
@@ -25,9 +26,12 @@ exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "e
 exposed-h2Db = "com.h2database:h2:2.1.214"
 exposed-hikariCp = "com.zaxxer:HikariCP:5.0.1"
 exposed-encache = "org.ehcache:ehcache:3.10.8"
+exposed-postgres = "org.postgresql:postgresql:42.6.0"
 
-kodein-mvc= "org.kodein.di:kodein-di-framework-ktor-server-controller-jvm:7.20.1"
-
+koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
+koin-logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
 [plugins]
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
