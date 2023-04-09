@@ -1,13 +1,10 @@
 package dev.reprator.dao
 
 import com.zaxxer.hikari.*
-import dev.reprator.modals.Language
+import dev.reprator.language.data.TableLanguage
 import io.ktor.server.config.*
-import kotlinx.coroutines.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.*
-import org.jetbrains.exposed.sql.transactions.experimental.*
-import java.io.*
 
 object DatabaseFactory {
     fun init(config: ApplicationConfig) {
@@ -19,8 +16,9 @@ object DatabaseFactory {
 
         val jdbcUrl = "jdbc:postgresql://$serverName:$portNumber/$databaseName"
         val database = Database.connect(createHikariDataSource(driverClassName, jdbcUrl))
+
         transaction(database) {
-            SchemaUtils.create(Language)
+            SchemaUtils.create(TableLanguage)
         }
     }
 
@@ -35,7 +33,4 @@ object DatabaseFactory {
         driverClassName = driverName
         validate()
     })
-
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
 }

@@ -1,11 +1,18 @@
-package dev.reprator.dao
+package dev.reprator.language.data
 
-import dev.reprator.modals.LanguageModal
+import dev.reprator.language.modal.LanguageModal
 
-interface DAOLanguageFacade {
+
+interface LanguageRepository {
+
     suspend fun allLanguage(): List<LanguageModal>
+
     suspend fun language(id: Int): LanguageModal?
+
     suspend fun addNewLanguage(name: String): LanguageModal?
+
     suspend fun editLanguage(id: Int, name: String): Boolean
+
     suspend fun deleteLanguage(id: Int): Boolean
+
 }

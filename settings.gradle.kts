@@ -13,3 +13,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Khatabook"
+
+include(":lib:core")
+include(":lib:language")

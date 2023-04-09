@@ -1,11 +1,8 @@
-package dev.reprator.modals
+package dev.reprator.language.data
 
 import org.jetbrains.exposed.sql.*
-import java.io.Serializable
 
-data class LanguageModal(val id: Int, val name: String): Serializable
-
-object Language : Table() {
+object TableLanguage : Table(name="language") {
     val id = integer("id").autoIncrement()
     val name = text("name")
 

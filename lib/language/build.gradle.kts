@@ -1,17 +1,10 @@
 plugins {
     kotlin("jvm") version libs.versions.kotlin
-    alias(libs.plugins.ktor)
 }
 
-group = "dev.reprator"
-version = "0.0.1"
-
-application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
-}
 
 dependencies {
-    implementation(project("lib:language"))
+    api(project(":lib:core"))
 
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.common)
@@ -24,9 +17,11 @@ dependencies {
     implementation(libs.ktor.logback)
 
     runtimeOnly(libs.exposed.postgres)
+    implementation(libs.exposed.core)
     implementation(libs.exposed.dao)
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.hikariCp)
+    implementation(libs.exposed.encache)
 
     implementation(libs.koin.ktor)
     implementation(libs.koin.logger)
