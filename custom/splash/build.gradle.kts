@@ -2,11 +2,8 @@ plugins {
     kotlin("jvm") version libs.versions.kotlin
 }
 
-
 dependencies {
-    api(project(":lib:core"))
-
-    implementation(libs.exposed.dao)
+    implementation(project(":lib:language"))
 
     implementation(libs.koin.ktor)
 }

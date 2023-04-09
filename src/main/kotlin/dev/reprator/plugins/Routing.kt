@@ -2,7 +2,9 @@ package dev.reprator.plugins
 
 import dev.reprator.core.FailResponse
 import dev.reprator.core.exception.StatusCodeException
-import dev.reprator.language.controller.languageRoute
+import dev.reprator.language.controller.routeLanguage
+import dev.reprator.splash.controller.routeSplash
+import dev.reprator.splash.setUpSplashFolder
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.plugins.statuspages.*
@@ -21,6 +23,7 @@ fun Application.configureRouting() {
     }
 
     routing {
-        languageRoute()
+        routeSplash(environment?.config?.setUpSplashFolder())
+        routeLanguage()
     }
 }

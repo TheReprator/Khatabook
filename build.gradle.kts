@@ -12,6 +12,7 @@ application {
 
 dependencies {
     implementation(project("lib:language"))
+    implementation(project("custom:splash"))
 
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.common)
@@ -24,7 +25,6 @@ dependencies {
     implementation(libs.ktor.logback)
 
     runtimeOnly(libs.exposed.postgres)
-    implementation(libs.exposed.dao)
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.hikariCp)
 

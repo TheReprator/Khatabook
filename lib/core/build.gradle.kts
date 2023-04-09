@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.ktor.server.core)
+    api(libs.ktor.server.core)
     api(libs.exposed.core)
 }

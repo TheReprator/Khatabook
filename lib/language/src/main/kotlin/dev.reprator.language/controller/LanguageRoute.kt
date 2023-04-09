@@ -13,7 +13,7 @@ import org.koin.ktor.ext.inject
 const val ENDPOINT_LANGUAGE = "/language"
 private const val INPUT_LANGUAGE_ID = "languageId"
 
-fun Routing.languageRoute() {
+fun Routing.routeLanguage() {
 
     val controller by inject<LanguageController>()
 
