@@ -33,10 +33,12 @@ koin-logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin
 
 test-junit5 = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit5" }
 test-junit5-runtime= { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5" }
-test-ktor-server ={ module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
+test-ktor-server ={ module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 test-koin = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 test-koin-junit5 = { module = "io.insert-koin:koin-test-junit5", version.ref = "koin" }
 test-assertJ = "org.assertj:assertj-core:3.24.2"
+test-kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+
 
 [plugins]
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }

@@ -25,6 +25,7 @@ fun Application.module() {
     }
 
     routing {
+        routeLanguage()
         routeSplash(environment?.config?.setUpSplashFolder())
     }
 }

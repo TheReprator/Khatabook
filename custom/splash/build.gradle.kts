@@ -14,6 +14,7 @@ dependencies {
     testImplementation(libs.test.ktor.server)
     testImplementation(libs.test.koin)
     testImplementation(libs.test.koin.junit5)
+    testImplementation(libs.test.kotlin)
 
     testImplementation(libs.ktor.client.content.negotiation)
 
@@ -27,6 +28,7 @@ dependencies {
     testImplementation(libs.exposed.jdbc)
     testImplementation(libs.exposed.hikariCp)
     testImplementation(libs.exposed.h2Db)
+
 }
 
 tasks.test {
