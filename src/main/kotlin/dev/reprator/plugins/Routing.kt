@@ -20,6 +20,20 @@ fun Application.configureRouting() {
             else
                 call.respond(FailResponse(HttpStatusCode.InternalServerError.value, "500: ${cause.message}"))
         }
+
+        status(HttpStatusCode.NotFound, HttpStatusCode.Forbidden) { call, status ->
+            val message = when (status) {
+                HttpStatusCode.NotFound -> {
+                    "Api doesnot exist"
+                }
+
+                else -> {
+                    "An unknown error occurred"
+                }
+            }
+            call.respond(FailResponse(status.value, message))
+        }
+
     }
 
     routing {
