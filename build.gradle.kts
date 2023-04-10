@@ -14,7 +14,6 @@ dependencies {
     implementation(project("lib:language"))
     implementation(project("custom:splash"))
 
-    implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.common)
     implementation(libs.ktor.server.status.page)
     implementation(libs.ktor.server.logging)
@@ -30,9 +29,4 @@ dependencies {
 
     implementation(libs.koin.ktor)
     implementation(libs.koin.logger)
-    testImplementation(libs.koin.test)
-    testImplementation(libs.koin.test.junit4)
-
-    testImplementation(libs.ktor.test.server)
-    testImplementation(libs.ktor.test.junit)
 }

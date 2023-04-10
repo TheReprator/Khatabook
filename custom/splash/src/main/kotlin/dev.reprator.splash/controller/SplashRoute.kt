@@ -26,7 +26,6 @@ fun Routing.routeSplash(splashDirectory: File?) {
             val languageList = languageFacade.getAllLanguage()
 
             val splashModal = SplashModal(file, languageList.toList())
-            println("vikram::: $splashModal")
             call.respond(ResultResponse(HttpStatusCode.OK.value, splashModal))
         }
 

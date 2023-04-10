@@ -17,9 +17,6 @@ ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor"
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor" }
 ktor-logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
-ktor-test-server = { module = "io.ktor:ktor-server-tests", version.ref = "ktor" }
-ktor-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
-
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedVersion" }
 exposed-dao= { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposedVersion" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposedVersion" }
@@ -30,8 +27,6 @@ exposed-postgres = "org.postgresql:postgresql:42.6.0"
 
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
 koin-logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
-koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
-koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
 [plugins]
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
