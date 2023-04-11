@@ -23,10 +23,7 @@ import io.ktor.test.dispatcher.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.RegisterExtension
 import org.koin.core.module.dsl.singleOf
@@ -37,6 +34,7 @@ import org.koin.test.inject
 import org.koin.test.junit5.KoinTestExtension
 import java.util.*
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(KtorServerExtension::class)
 internal class SplashController : KoinTest {
 
@@ -67,6 +65,11 @@ internal class SplashController : KoinTest {
         transaction {
             TableLanguage.deleteAll()
         }
+    }
+
+    @AfterAll
+    fun closeDataBase() {
+        databaseFactory.close()
     }
 
     @Test

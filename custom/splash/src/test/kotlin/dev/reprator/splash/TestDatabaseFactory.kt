@@ -31,7 +31,7 @@ class TestDatabaseFactory : DatabaseFactory {
         return HikariDataSource(config)
     }
 
-    fun close() {
+    override fun close() {
         source.close()
     }
 }
