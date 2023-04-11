@@ -1,6 +1,7 @@
 package dev.reprator.splash
 
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.jackson.jackson
 import io.ktor.server.config.ApplicationConfig
@@ -9,16 +10,14 @@ import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
-import org.junit.jupiter.api.extension.AfterAllCallback
-import org.junit.jupiter.api.extension.BeforeAllCallback
-import org.junit.jupiter.api.extension.ExtensionContext
+import org.junit.jupiter.api.extension.*
 
-class KtorServerExtension : BeforeAllCallback, AfterAllCallback {
+class KtorServerExtension : BeforeEachCallback, AfterEachCallback {
     companion object {
         private lateinit var server: NettyApplicationEngine
     }
 
-    override fun beforeAll(context: ExtensionContext?) {
+    override fun beforeEach(context: ExtensionContext?) {
         val env = applicationEngineEnvironment {
             config = ApplicationConfig("application-test.conf")
             // Public API
@@ -30,16 +29,24 @@ class KtorServerExtension : BeforeAllCallback, AfterAllCallback {
         server = embeddedServer(Netty, env).start(false)
     }
 
-    override fun afterAll(context: ExtensionContext?) {
+    override fun afterEach(context: ExtensionContext?) {
         server.stop(100, 100)
     }
 }
 
 fun createHttpClient(): HttpClient {
     val client = HttpClient {
+
         install(ContentNegotiation) {
             jackson()
         }
+
+        install(HttpTimeout) {
+            connectTimeoutMillis = 30000
+            socketTimeoutMillis = 30000
+            requestTimeoutMillis = 30000
+        }
     }
+
     return client
 }

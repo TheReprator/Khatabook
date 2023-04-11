@@ -10,7 +10,6 @@ dependencies {
     // testing
     testImplementation(libs.test.junit5)
     testRuntimeOnly(libs.test.junit5.runtime)
-    testImplementation(libs.test.assertJ)
     testImplementation(libs.test.ktor.server)
     testImplementation(libs.test.koin)
     testImplementation(libs.test.koin.junit5)

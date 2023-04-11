@@ -24,19 +24,16 @@ exposed-dao= { module = "org.jetbrains.exposed:exposed-dao", version.ref = "expo
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposedVersion" }
 exposed-h2Db = "com.h2database:h2:2.1.214"
 exposed-hikariCp = "com.zaxxer:HikariCP:5.0.1"
-exposed-encache = "org.ehcache:ehcache:3.10.8"
 exposed-postgres = "org.postgresql:postgresql:42.6.0"
 
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
 koin-logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
-
 
 test-junit5 = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit5" }
 test-junit5-runtime= { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5" }
 test-ktor-server ={ module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 test-koin = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 test-koin-junit5 = { module = "io.insert-koin:koin-test-junit5", version.ref = "koin" }
-test-assertJ = "org.assertj:assertj-core:3.24.2"
 test-kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 
 

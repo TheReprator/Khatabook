@@ -6,6 +6,6 @@ interface HttpStatusCodeModal {
 }
 
 
-data class ResultResponse(override val statusCode: Int, val data: Any) : HttpStatusCodeModal
+data class ResultResponse<T>(override val statusCode: Int, val data: T) : HttpStatusCodeModal
 
 data class FailResponse(override val statusCode: Int, val error: String) : HttpStatusCodeModal

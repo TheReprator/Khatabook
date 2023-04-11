@@ -33,7 +33,6 @@ fun Application.configureRouting() {
             }
             call.respond(FailResponse(status.value, message))
         }
-
     }
 
     routing {
