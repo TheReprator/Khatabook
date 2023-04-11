@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":lib:language"))
+    implementation(project(":api:language"))
 
     implementation(libs.koin.ktor)
 

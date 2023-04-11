@@ -41,7 +41,7 @@ object SchemaDefinition {
     fun createSchema(dataSource: HikariDataSource) {
         RunScript.execute(
             dataSource.connection, Files.newBufferedReader(
-                Paths.get("src/main/resources/db/schema.sql")
+                Paths.get("src/test/resources/db/schema.sql")
             )
         )
     }

@@ -23,6 +23,10 @@ class DefaultDatabaseFactory(appConfig: AppDBConfiguration) : DatabaseFactory {
         }
     }
 
+    override fun close() {
+        dataSource.close()
+    }
+
     private fun hikari(): HikariDataSource {
         val jdbcUrl = "jdbc:postgresql://${dbConfig.serverName}:${dbConfig.port}/${dbConfig.dbName}"
         return createHikariDataSource(dbConfig.driverClass, jdbcUrl)
