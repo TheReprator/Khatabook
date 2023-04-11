@@ -9,9 +9,9 @@ import dev.reprator.language.data.TableLanguage
 import dev.reprator.language.modal.LanguageEntity
 import dev.reprator.language.modal.LanguageModal
 import dev.reprator.language.setUpKoinLanguage
-import dev.reprator.splash.KtorServerExtension
-import dev.reprator.splash.TestDatabaseFactory
-import dev.reprator.splash.createHttpClient
+import dev.reprator.testModule.KtorServerExtension
+import dev.reprator.testModule.TestDatabaseFactory
+import dev.reprator.testModule.createHttpClient
 import io.ktor.client.call.*
 import io.ktor.client.network.sockets.*
 import io.ktor.client.plugins.*

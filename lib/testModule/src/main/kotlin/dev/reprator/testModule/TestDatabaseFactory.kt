@@ -1,4 +1,4 @@
-package dev.reprator.splash
+package dev.reprator.testModule
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource

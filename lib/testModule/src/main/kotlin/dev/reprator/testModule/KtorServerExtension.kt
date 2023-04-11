@@ -1,4 +1,4 @@
-package dev.reprator.splash
+package dev.reprator.testModule
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.*
