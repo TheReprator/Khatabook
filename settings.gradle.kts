@@ -14,6 +14,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Khatabook"
 
+include(":lib:testModule")
 include(":lib:core")
 include(":api:language")
 include(":api:splash")
