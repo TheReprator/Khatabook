@@ -9,6 +9,7 @@ dependencies {
 
     // testing
     testImplementation(libs.test.ktor.server)
+    testImplementation(libs.test.mockk)
     testImplementation(project(":lib:testModule"))
 }
 
