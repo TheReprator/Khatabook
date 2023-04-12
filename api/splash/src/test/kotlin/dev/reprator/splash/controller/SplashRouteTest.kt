@@ -46,13 +46,11 @@ internal class SplashController : KoinTest {
 
         coEvery {
             mockLanguageFacade.getAllLanguage()
-        } returns emptyList()
+        } returns langList
 
 
         val client = createHttpClient()
-        val response:ResultResponse<SplashModal> = client.get("$BASE_URL$ENDPOINT_SPLASH"){
-
-        }.body()
+        val response:ResultResponse<SplashModal> = client.get("$BASE_URL$ENDPOINT_SPLASH").body()
 
         Assertions.assertNotNull(response)
     }
