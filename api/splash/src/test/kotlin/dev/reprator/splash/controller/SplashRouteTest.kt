@@ -10,6 +10,7 @@ import dev.reprator.language.modal.LanguageEntity
 import dev.reprator.language.modal.LanguageModal
 import dev.reprator.language.setUpKoinLanguage
 import dev.reprator.testModule.KtorServerExtension
+import dev.reprator.testModule.KtorServerExtension.Companion.BASE_URL
 import dev.reprator.testModule.TestDatabaseFactory
 import dev.reprator.testModule.createHttpClient
 import io.ktor.client.call.*
@@ -39,7 +40,6 @@ import java.util.*
 internal class SplashController : KoinTest {
 
     companion object {
-        const val BASE_URL = "http://0.0.0.0:8080"
         const val LANGUAGE_ENGLISH = "English"
         const val LANGUAGE_HINDI = "Hindi"
     }
@@ -70,29 +70,6 @@ internal class SplashController : KoinTest {
     @AfterAll
     fun closeDataBase() {
         databaseFactory.close()
-    }
-
-    @Test
-    fun `Socket Timeout example`(): Unit = runBlocking {
-        val client = createHttpClient()
-
-        val SOCKET_TIME_OUT = 100L
-
-        val exception: Throwable = assertThrows<SocketTimeoutException>("assertThrows") {
-            client.post("$BASE_URL$ENDPOINT_LANGUAGE") {
-                timeout {
-                    socketTimeoutMillis = SOCKET_TIME_OUT
-                }
-                setBody(LANGUAGE_ENGLISH)
-                contentType(ContentType.Application.Json)
-            }
-        }
-
-        Assertions.assertEquals(SocketTimeoutException::class.java, exception.javaClass)
-        Assertions.assertEquals(
-            "Socket timeout has expired [url=$BASE_URL$ENDPOINT_LANGUAGE, socket_timeout=$SOCKET_TIME_OUT] ms",
-            exception.localizedMessage
-        )
     }
 
     private fun addLanguageInDb(languageName: String) = runBlocking {

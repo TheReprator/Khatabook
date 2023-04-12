@@ -29,4 +29,13 @@ dependencies {
 
     implementation(libs.koin.ktor)
     implementation(libs.koin.logger)
+
+    // testing
+    testImplementation(project(":lib:testModule"))
+    testImplementation(libs.test.ktor.server)
+}
+
+tasks.test {
+    // Use the built-in JUnit support of Gradle.
+    useJUnitPlatform()
 }

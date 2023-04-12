@@ -1,5 +1,7 @@
 package dev.reprator.testModule
 
+import dev.reprator.core.ERROR_DESCRIPTION_NOT_FOUND
+import dev.reprator.core.ERROR_DESCRIPTION_UNKNOWN
 import dev.reprator.core.FailResponse
 import dev.reprator.core.exception.StatusCodeException
 import io.ktor.http.*
@@ -25,13 +27,8 @@ fun Application.configureCoreModule() {
 
         status(HttpStatusCode.NotFound, HttpStatusCode.Forbidden) { call, status ->
             val message = when (status) {
-                HttpStatusCode.NotFound -> {
-                    "Api doesnot exist"
-                }
-
-                else -> {
-                    "An unknown error occurred"
-                }
+                HttpStatusCode.NotFound -> ERROR_DESCRIPTION_NOT_FOUND
+                else -> ERROR_DESCRIPTION_UNKNOWN
             }
             call.respond(FailResponse(status.value, message))
         }

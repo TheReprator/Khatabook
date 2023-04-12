@@ -14,7 +14,14 @@ import org.junit.jupiter.api.extension.*
 
 class KtorServerExtension : BeforeEachCallback, AfterEachCallback {
     companion object {
+        const val BASE_HOST = "0.0.0.0"
         private lateinit var server: NettyApplicationEngine
+
+        var testPort: Int = 0
+            private set
+
+        val BASE_URL: String
+            get() = "http://$BASE_HOST:$testPort"
     }
 
     override fun beforeEach(context: ExtensionContext?) {
@@ -22,8 +29,9 @@ class KtorServerExtension : BeforeEachCallback, AfterEachCallback {
             config = ApplicationConfig("application-test.conf")
             // Public API
             connector {
-                host = "0.0.0.0"
-                port = 8080
+                host = BASE_HOST
+                port = config.property("ktor.deployment.port").getString().toInt()
+                testPort = port
             }
         }
         server = embeddedServer(Netty, env).start(false)

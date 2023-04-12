@@ -7,8 +7,9 @@ dependencies {
     api(libs.exposed.core)
 
     // testing
-    api(libs.test.junit5)
     api(project(mapOf("path" to ":lib:core")))
+    api(libs.test.junit5)
+    api(libs.test.junit5.suite)
     api(libs.test.junit5.runtime)
     api(libs.test.ktor.server)
     api(libs.test.koin)
