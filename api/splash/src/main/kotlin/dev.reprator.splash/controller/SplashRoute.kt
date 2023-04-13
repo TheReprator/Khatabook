@@ -7,6 +7,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import java.io.File
 
@@ -19,13 +20,17 @@ fun Routing.routeSplash(splashDirectory: File?) {
     route(ENDPOINT_SPLASH) {
         get {
 
-            val file: List<String> = splashDirectory?.listFiles()?.map {
-                it.absolutePath
-            }.orEmpty()
+            val fileAsyncResult = async {
+                 splashDirectory?.listFiles()?.map {
+                    it.absolutePath
+                }.orEmpty()
+            }
 
-            val languageList = languageFacade.getAllLanguage()
+            val languageAsyncResult = async {
+                languageFacade.getAllLanguage().toList()
+            }
 
-            val splashModal = SplashModal(file, languageList.toList())
+            val splashModal = SplashModal(fileAsyncResult.await(), languageAsyncResult.await())
             call.respond(ResultResponse(HttpStatusCode.OK.value, splashModal))
         }
 
