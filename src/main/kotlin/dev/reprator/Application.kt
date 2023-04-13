@@ -2,6 +2,7 @@ package dev.reprator
 
 import dev.reprator.configuration.setupApplicationConfiguration
 import dev.reprator.core.DatabaseFactory
+import dev.reprator.country.setUpKoinCountry
 import dev.reprator.language.setUpKoinLanguage
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -19,8 +20,9 @@ fun Application.module() {
 
     install(Koin) {
         SLF4JLogger()
-        setUpKoinLanguage()
         modules(koinAppModule)
+        setUpKoinLanguage()
+        setUpKoinCountry()
     }
 
     val databaseFactory : DatabaseFactory by inject { parametersOf(environment.config.setupApplicationConfiguration()) }
