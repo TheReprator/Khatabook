@@ -11,7 +11,6 @@ interface CountryEntity {
     val shortCode: CountryShortCode
 
     data class DTO (
-        val id: CountryId,
         override val name: CountryName,
         override val code: CountryCode,
         override val shortCode: CountryShortCode

@@ -9,7 +9,7 @@ class CountryFacadeImpl(private val repository: CountryRepository): CountryFacad
 
     override suspend fun getAllCountry(): Iterable<CountryModal> {
         return repository.getAllCountry().ifEmpty {
-            throw CountryEmptyException("No Country found")
+            throw CountryEmptyException()
         }
     }
 
@@ -22,8 +22,12 @@ class CountryFacadeImpl(private val repository: CountryRepository): CountryFacad
     }
 
     override suspend fun editCountry(countryInfo: CountryEntity.DTO): Boolean {
-        return repository.editCountry(countryInfo)
+        TODO("Not yet implemented")
+        //override suspend fun editCountry(countryInfo: CountryEntity.DTO): Boolean {
+        //        return repository.editCountry(countryInfo)
+        //    }
     }
+
 
     override suspend fun deleteCountry(id: CountryId) {
         return repository.deleteCountry(id)

@@ -32,7 +32,7 @@ fun Routing.routeCountry() {
 
         post {
             val countryInfo =
-                call.receiveNullable<CountryEntity>() ?: throw StatusCodeException.BadRequest(message = "Enter valid language")
+                call.receiveNullable<CountryEntity.DTO>() ?: throw StatusCodeException.BadRequest(message = "Enter valid country")
             call.respond(ResultResponse(HttpStatusCode.Created.value, countryFacade.addNewCountry(countryInfo)))
         }
 
