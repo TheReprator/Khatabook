@@ -53,5 +53,7 @@ internal class SplashController : KoinTest {
         val response:ResultResponse<SplashModal> = client.get("$BASE_URL$ENDPOINT_SPLASH").body()
 
         Assertions.assertNotNull(response)
+        Assertions.assertEquals(langList.size, response.data.languageList.size)
+        Assertions.assertEquals(langList, response.data.languageList)
     }
 }
