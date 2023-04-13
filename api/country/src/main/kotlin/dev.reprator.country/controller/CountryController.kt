@@ -19,7 +19,7 @@ interface CountryController  {
     suspend fun addNewCountry(countryInfo: CountryEntity): CountryModal
 
     @Throws(IllegalCountryException::class)
-    suspend fun editCountry(countryInfo: CountryEntity.DTO): Boolean
+    suspend fun editCountry(id: CountryId, countryInfo: CountryEntity): Boolean
 
     @Throws(IllegalCountryException::class)
     suspend fun deleteCountry(id: CountryId)

@@ -41,18 +41,17 @@ class CountryRepositoryImpl(private val mapper: Mapper<TableCountryEntity, Count
         resultRowToCountry(newCountry)
     }
 
-    override suspend fun editCountry(countryInfo: CountryEntity.DTO): Boolean = transaction {
-        /*TableCountryEntity.findById(countryInfo.id) ?: throw IllegalCountryException()
+    override suspend fun editCountry(countryId: CountryId, countryInfo: CountryEntity): Boolean = transaction {
+        TableCountryEntity.findById(countryId) ?: throw IllegalCountryException()
 
-        TableCountry.update({ TableCountry.id eq countryInfo.id }) {
+        TableCountry.update({ TableCountry.id eq countryId }) {
             it[TableCountry.name] = countryInfo.name
             it[TableCountry.isocode] = countryInfo.code
             it[TableCountry.shortcode] = countryInfo.shortCode
-        } > 0*/
-        TODO("Not yet implemented")
+        } > 0
     }
 
-    override suspend fun deleteCountry(id: CountryId): Unit {
+    override suspend fun deleteCountry(id: CountryId): Unit = transaction {
         val existingCountry =
             TableCountryEntity.find { TableCountry.id eq id }.firstOrNull()
                 ?: throw IllegalCountryException()

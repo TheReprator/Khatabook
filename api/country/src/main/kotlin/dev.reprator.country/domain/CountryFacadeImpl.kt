@@ -21,11 +21,8 @@ class CountryFacadeImpl(private val repository: CountryRepository): CountryFacad
        return repository.addNewCountry(countryInfo)
     }
 
-    override suspend fun editCountry(countryInfo: CountryEntity.DTO): Boolean {
-        TODO("Not yet implemented")
-        //override suspend fun editCountry(countryInfo: CountryEntity.DTO): Boolean {
-        //        return repository.editCountry(countryInfo)
-        //    }
+    override suspend fun editCountry(countryId: CountryId, countryInfo: CountryEntity): Boolean {
+        return repository.editCountry(countryId, countryInfo)
     }
 
 

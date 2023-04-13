@@ -13,7 +13,7 @@ class CountryControllerImpl(private val countryFacade: CountryFacade) : CountryC
 
     override suspend fun addNewCountry(countryInfo: CountryEntity) = countryFacade.addNewCountry(countryInfo)
 
-    override suspend fun editCountry(countryInfo: CountryEntity.DTO): Boolean = countryFacade.editCountry(countryInfo)
+    override suspend fun editCountry(id: CountryId, countryInfo: CountryEntity): Boolean = countryFacade.editCountry(id, countryInfo)
 
     override suspend fun deleteCountry(id: CountryId) = countryFacade.deleteCountry(id)
 

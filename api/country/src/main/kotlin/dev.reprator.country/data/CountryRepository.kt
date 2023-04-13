@@ -12,7 +12,7 @@ interface CountryRepository {
 
     suspend fun addNewCountry(countryInfo: CountryEntity): CountryModal
 
-    suspend fun editCountry(countryInfo: CountryEntity.DTO): Boolean
+    suspend fun editCountry(countryId: CountryId, countryInfo: CountryEntity): Boolean
 
     suspend fun deleteCountry(id: CountryId): Unit
 

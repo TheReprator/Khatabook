@@ -36,16 +36,22 @@ fun Routing.routeCountry() {
             call.respond(ResultResponse(HttpStatusCode.Created.value, countryFacade.addNewCountry(countryInfo)))
         }
 
-        patch {
+        put ("{$INPUT_COUNTRY_ID}") {
+            val countryId = call.parameters[INPUT_COUNTRY_ID]?.toIntOrNull() ?: throw StatusCodeException.BadRequest(
+                message = "Enter valid country id"
+            )
+
             val countryInfo = call.receiveNullable<CountryEntity.DTO>() ?: throw StatusCodeException.BadRequest(message = "Enter valid data")
-            call.respond(ResultResponse(HttpStatusCode.OK.value, countryFacade.editCountry(countryInfo)))
+            call.respond(ResultResponse(HttpStatusCode.OK.value, countryFacade.editCountry(countryId, countryInfo)))
         }
 
         delete("{$INPUT_COUNTRY_ID}") {
-            val languageId = call.parameters[INPUT_COUNTRY_ID]?.toIntOrNull() ?: throw StatusCodeException.BadRequest(
+            val countryId = call.parameters[INPUT_COUNTRY_ID]?.toIntOrNull() ?: throw StatusCodeException.BadRequest(
                 message = "Enter valid country id"
             )
-            call.respond(ResultResponse(HttpStatusCode.OK.value, countryFacade.deleteCountry(languageId)))
+
+            countryFacade.deleteCountry(countryId)
+            call.respond(ResultResponse(HttpStatusCode.OK.value, true))
         }
     }
 }
