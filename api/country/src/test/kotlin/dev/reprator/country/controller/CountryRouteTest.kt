@@ -36,7 +36,7 @@ import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(KtorServerExtension::class)
-internal class LanguageRouteTest : KoinTest {
+internal class CountryRouteTest : KoinTest {
 
     private val databaseFactory by inject<DatabaseFactory>()
     private val countryRepository by inject<CountryRepository>()
