@@ -7,6 +7,7 @@ import dev.reprator.country.domain.IllegalCountryException
 import dev.reprator.country.modal.CountryEntity
 import dev.reprator.country.modal.CountryId
 import dev.reprator.country.modal.CountryModal
+import dev.reprator.country.modal.CountryName
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
@@ -48,6 +49,14 @@ class CountryRepositoryImpl(private val mapper: Mapper<TableCountryEntity, Count
             it[TableCountry.name] = countryInfo.name
             it[TableCountry.isocode] = countryInfo.code
             it[TableCountry.shortcode] = countryInfo.shortCode
+        } > 0
+    }
+
+    override suspend fun editCountryName(countryId: CountryId, countryName: CountryName): Boolean = transaction {
+        TableCountryEntity.findById(countryId) ?: throw IllegalCountryException()
+
+        TableCountry.update({ TableCountry.id eq countryId }) {
+            it[TableCountry.name] = countryName
         } > 0
     }
 

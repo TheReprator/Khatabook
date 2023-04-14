@@ -3,6 +3,7 @@ package dev.reprator.country.domain
 import dev.reprator.country.modal.CountryEntity
 import dev.reprator.country.modal.CountryId
 import dev.reprator.country.modal.CountryModal
+import dev.reprator.country.modal.CountryName
 
 interface CountryFacade {
 
@@ -17,6 +18,9 @@ interface CountryFacade {
 
     @Throws(IllegalCountryException::class)
     suspend fun editCountry(countryId: CountryId, countryInfo: CountryEntity): Boolean
+
+    @Throws(IllegalCountryException::class)
+    suspend fun editCountryName(countryId: CountryId, countryName: CountryName): Boolean
 
     @Throws(IllegalCountryException::class)
     suspend fun deleteCountry(id: CountryId)

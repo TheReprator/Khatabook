@@ -45,6 +45,15 @@ fun Routing.routeCountry() {
             call.respond(ResultResponse(HttpStatusCode.OK.value, countryFacade.editCountry(countryId, countryInfo)))
         }
 
+        patch ("{$INPUT_COUNTRY_ID}") {
+            val countryId = call.parameters[INPUT_COUNTRY_ID]?.toIntOrNull() ?: throw StatusCodeException.BadRequest(
+                message = "Enter valid country id"
+            )
+
+            val countryInfo = call.receiveNullable<String>() ?: throw StatusCodeException.BadRequest(message = "Enter valid data")
+            call.respond(ResultResponse(HttpStatusCode.OK.value, countryFacade.editCountryName(countryId, countryInfo)))
+        }
+
         delete("{$INPUT_COUNTRY_ID}") {
             val countryId = call.parameters[INPUT_COUNTRY_ID]?.toIntOrNull() ?: throw StatusCodeException.BadRequest(
                 message = "Enter valid country id"

@@ -6,6 +6,7 @@ import dev.reprator.country.domain.IllegalCountryException
 import dev.reprator.country.modal.CountryEntity
 import dev.reprator.country.modal.CountryId
 import dev.reprator.country.modal.CountryModal
+import dev.reprator.country.modal.CountryName
 
 interface CountryController  {
 
@@ -17,6 +18,9 @@ interface CountryController  {
 
     @Throws(IllegalCountryException::class)
     suspend fun addNewCountry(countryInfo: CountryEntity): CountryModal
+
+    @Throws(IllegalCountryException::class)
+    suspend fun updateCountryName(id: CountryId, countryName: CountryName): Boolean
 
     @Throws(IllegalCountryException::class)
     suspend fun editCountry(id: CountryId, countryInfo: CountryEntity): Boolean
