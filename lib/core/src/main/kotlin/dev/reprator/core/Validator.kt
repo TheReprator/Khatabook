@@ -1,5 +1,5 @@
 package dev.reprator.core
 
-public interface Validatior<T> {
+public interface Validator<T> {
     fun validate(): T
 }

@@ -1,9 +1,7 @@
 package dev.reprator.country.modal
 
-import dev.reprator.core.Validatior
-import dev.reprator.core.exception.StatusCodeException
+import dev.reprator.core.Validator
 import dev.reprator.country.domain.IllegalCountryException
-import kotlin.reflect.full.memberProperties
 
 typealias CountryId = Int
 typealias CountryName = String
@@ -32,7 +30,7 @@ interface CountryEntity {
         override val name: CountryName,
         override val code: CountryCode,
         override val shortCode: CountryShortCode
-    ) : CountryEntity, Validatior<DTO> {
+    ) : CountryEntity, Validator<DTO> {
 
         override fun validate(): DTO {
             validateCountryName(name)
