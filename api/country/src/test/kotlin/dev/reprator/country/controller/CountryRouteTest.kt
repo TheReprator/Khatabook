@@ -5,6 +5,7 @@ import dev.reprator.core.FailResponse
 import dev.reprator.core.ResultResponse
 import dev.reprator.country.data.CountryRepository
 import dev.reprator.country.data.TableCountry
+import dev.reprator.country.domain.CountryNotFoundException
 import dev.reprator.country.modal.CountryEntity
 import dev.reprator.country.modal.CountryModal
 import dev.reprator.country.setUpKoinCountry
@@ -37,6 +38,10 @@ import java.util.*
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(KtorServerExtension::class)
 internal class CountryRouteTest : KoinTest {
+
+    companion object {
+        private val INPUT_COUNTRY = CountryEntity.DTO("India",91,"IN")
+    }
 
     private val databaseFactory by inject<DatabaseFactory>()
     private val countryRepository by inject<CountryRepository>()
@@ -76,168 +81,206 @@ internal class CountryRouteTest : KoinTest {
 
     @Test
     fun `Add new country And Verify from db by id for existence`(): Unit = runBlocking {
-        val countryInput = CountryEntity.DTO("India",91, "In")
-        val response = addCountryInDb(countryInput)
+        val response = addCountryInDb(INPUT_COUNTRY)
 
         Assertions.assertEquals(response.status, HttpStatusCode.OK)
         val resultBody = response.body<ResultResponse<CountryModal.DTO>>()
 
         Assertions.assertNotNull(resultBody)
-        Assertions.assertEquals(countryInput.name, resultBody.data.name)
+        Assertions.assertEquals(INPUT_COUNTRY.name, resultBody.data.name)
+    }
+
+    @Test
+    fun `Failed to add new country, for invalid countryCode`(): Unit = runBlocking {
+        val addCountryResponse = addCountryInDb(INPUT_COUNTRY.copy(code = -5))
+
+        val resultBodyAgain = addCountryResponse.body<FailResponse>()
+        Assertions.assertEquals(HttpStatusCode.BadRequest.value, resultBodyAgain.statusCode)
+        Assertions.assertNotNull(resultBodyAgain)
     }
 
     @Test
     fun `Failed to add new country, if country already exist`(): Unit = runBlocking {
-        val countryInput = CountryEntity.DTO("India",91, "In")
-        val addCountryResponse = addCountryInDb(countryInput)
+        val addCountryResponse = addCountryInDb(INPUT_COUNTRY)
 
         Assertions.assertEquals(addCountryResponse.status, HttpStatusCode.OK)
         val resultBody = addCountryResponse.body<ResultResponse<CountryModal.DTO>>()
 
         Assertions.assertNotNull(resultBody)
-        Assertions.assertEquals(countryInput.name, resultBody.data.name)
+        Assertions.assertEquals(INPUT_COUNTRY.name, resultBody.data.name)
 
-        val addAgainEnglishLanguageResponse = addCountryInDb(countryInput)
+        val addAgainSameCountryResponse = addCountryInDb(INPUT_COUNTRY)
 
-        val resultBodyAgain = addAgainEnglishLanguageResponse.body<FailResponse>()
+        val resultBodyAgain = addAgainSameCountryResponse.body<FailResponse>()
         Assertions.assertEquals(HttpStatusCode.BadRequest.value, resultBodyAgain.statusCode)
         Assertions.assertNotNull(resultBodyAgain)
     }
 
-  /*  @Test
-    fun `Failed to add new language, if language already exist`(): Unit = runBlocking {
-        val addEnglishLanguageResponse = addLanguageInDb(LANGUAGE_ENGLISH)
-
-        Assertions.assertEquals(addEnglishLanguageResponse.status, HttpStatusCode.OK)
-        val resultBody = addEnglishLanguageResponse.body<ResultResponse<LanguageModal.DTO>>()
-        Assertions.assertNotNull(resultBody)
-
-        Assertions.assertEquals(languageRepository.language(resultBody.data.id)?.name, LANGUAGE_ENGLISH)
-        Assertions.assertEquals(resultBody.data.name, LANGUAGE_ENGLISH)
-
-        val addAgainEnglishLanguageResponse = addLanguageInDb(LANGUAGE_ENGLISH)
-        Assertions.assertEquals(addAgainEnglishLanguageResponse.status, HttpStatusCode.OK)
-        val resultBodyAgain = addAgainEnglishLanguageResponse.body<FailResponse>()
-        Assertions.assertEquals(resultBodyAgain.statusCode, HttpStatusCode.InternalServerError.value)
-        Assertions.assertNotNull(resultBodyAgain)
-    }
-
     @Test
-    fun `Get all language from db`(): Unit = runBlocking {
-        val languageList = listOf(LANGUAGE_ENGLISH, LANGUAGE_HINDI)
-        languageList.forEach {
-            addLanguageInDb(it)
+    fun `Get all country from db`(): Unit = runBlocking {
+        val countryInputList = listOf(INPUT_COUNTRY,
+            CountryEntity.DTO("Pakistan",92,"PAK"))
+
+        countryInputList.forEach {
+            addCountryInDb(it)
         }
 
         val client = createHttpClient()
         val response = client.get("$BASE_URL$ENDPOINT_COUNTRY")
 
         Assertions.assertEquals(response.status, HttpStatusCode.OK)
-        val resultBody = response.body<ResultResponse<List<LanguageModal.DTO>>>()
+        val resultBody = response.body<ResultResponse<List<CountryModal.DTO>>>()
         Assertions.assertNotNull(resultBody)
 
-        Assertions.assertEquals(resultBody.data.size, languageList.size)
-        Assertions.assertEquals(resultBody.data.first().name, languageList.first())
+        Assertions.assertEquals(resultBody.data.size, countryInputList.size)
+        Assertions.assertEquals(resultBody.data.first().name, countryInputList.first().name)
     }
 
     @Test
-    fun `Get language from db by ID, if exist`(): Unit = runBlocking {
-        val addLanguageResponse = addLanguageInDb(LANGUAGE_ENGLISH)
+    fun `Get country from db by ID, if exist`(): Unit = runBlocking {
+        val addCountryResponse = addCountryInDb(INPUT_COUNTRY)
 
-        Assertions.assertEquals(addLanguageResponse.status, HttpStatusCode.OK)
-        val addResultBody = addLanguageResponse.body<ResultResponse<LanguageModal.DTO>>()
+        val addResultBody = addCountryResponse.body<ResultResponse<CountryModal.DTO>>()
         Assertions.assertNotNull(addResultBody)
 
         val client = createHttpClient()
         val findResponseSuccess = client.get("$BASE_URL$ENDPOINT_COUNTRY/${addResultBody.data.id}")
 
-        Assertions.assertEquals(findResponseSuccess.status, HttpStatusCode.OK)
-        val findResultBody = findResponseSuccess.body<ResultResponse<LanguageModal.DTO>>()
+        val findResultBody = findResponseSuccess.body<ResultResponse<CountryModal.DTO>>()
         Assertions.assertNotNull(findResultBody)
-        Assertions.assertEquals(findResultBody.data.name, LANGUAGE_ENGLISH)
+        Assertions.assertEquals(findResultBody.data.shortCode, INPUT_COUNTRY.shortCode)
     }
 
     @Test
-    fun `Failed to get language from db by ID, as it didn't exit in db`(): Unit = runBlocking {
-        val languageId = 90
+    fun `Failed to get Country from db by ID, as it didn't exit in db`(): Unit = runBlocking {
+        val countryId = 90
 
         val client = createHttpClient()
-        val findResponseSuccess = client.get("$BASE_URL$ENDPOINT_COUNTRY/$languageId")
+        val findResponseSuccess = client.get("$BASE_URL$ENDPOINT_COUNTRY/$countryId")
 
         Assertions.assertEquals(findResponseSuccess.status, HttpStatusCode.OK)
+
         val findResultBody = findResponseSuccess.body<FailResponse>()
-        Assertions.assertEquals(findResultBody.statusCode, HttpStatusCode.NoContent.value)
+        Assertions.assertEquals(HttpStatusCode.NotFound.value, findResultBody.statusCode)
     }
 
-    @Test
-    fun `Edit language from db by ID, as it exists`(): Unit = runBlocking {
-        val addLanguageResponse = addLanguageInDb(LANGUAGE_ENGLISH)
 
-        val editLanguage = "Khatabook"
-        Assertions.assertEquals(addLanguageResponse.status, HttpStatusCode.OK)
-        val addResultBody = addLanguageResponse.body<ResultResponse<LanguageModal.DTO>>()
-        Assertions.assertNotNull(addResultBody)
-        Assertions.assertEquals(LANGUAGE_ENGLISH, addResultBody.data.name)
+    @Test
+    fun `Update full country, as it exists`(): Unit = runBlocking {
+        val addCountryResponse = addCountryInDb(INPUT_COUNTRY)
+
+        val addResultBody = addCountryResponse.body<ResultResponse<CountryModal.DTO>>()
+        Assertions.assertEquals(INPUT_COUNTRY.code, addResultBody.data.code)
+
+        val changedRequestBody = CountryEntity.DTO("United Arab Emirates",971,"UAE")
 
         val client = createHttpClient()
-        val editResponse = client.patch("$BASE_URL$ENDPOINT_LANGUAGE") {
+        val editResponse = client.put("$BASE_URL$ENDPOINT_COUNTRY/${addResultBody.data.id}") {
             contentType(ContentType.Application.Json)
-            setBody(LanguageEntity.DTO(addResultBody.data.id, editLanguage))
+            setBody(changedRequestBody)
         }
 
-        Assertions.assertEquals(editResponse.status, HttpStatusCode.OK)
-        val editBody = editResponse.body<ResultResponse<Boolean>>()
-        Assertions.assertEquals(editBody.statusCode, HttpStatusCode.OK.value)
+        val editResponseBody = editResponse.body<ResultResponse<Boolean>>()
+        Assertions.assertEquals(HttpStatusCode.OK.value, editResponseBody.statusCode)
 
-        Assertions.assertEquals(languageRepository.language(addResultBody.data.id)?.name, editLanguage)
+        Assertions.assertEquals(changedRequestBody.name, countryRepository.getCountry(addResultBody.data.id).name)
     }
 
     @Test
-    fun `Edit language from db by ID got failed, as it didn't exists`(): Unit = runBlocking {
-        val languageId = 21
+    fun `Update of country got failed, as it didn't exists`(): Unit = runBlocking {
+        val countryId = 21
 
         val client = createHttpClient()
-        val editResponse = client.patch("$BASE_URL$ENDPOINT_COUNTRY") {
+        val editResponse = client.put("$BASE_URL$ENDPOINT_COUNTRY/$countryId") {
             contentType(ContentType.Application.Json)
-            setBody(LanguageEntity.DTO(languageId, "vikram"))
+            setBody(INPUT_COUNTRY)
         }
 
-        Assertions.assertEquals(editResponse.status, HttpStatusCode.OK)
-        val editBody = editResponse.body<ResultResponse<Boolean>>()
-        Assertions.assertEquals(editBody.statusCode, HttpStatusCode.OK.value)
-        Assertions.assertEquals(editBody.data, false)
+        val editBody = editResponse.body<FailResponse>()
+        Assertions.assertEquals(HttpStatusCode.BadRequest.value, editBody.statusCode)
     }
 
     @Test
-    fun `Delete language from db by ID, as it exists`(): Unit = runBlocking {
-        val addLanguageResponse = addLanguageInDb(LANGUAGE_ENGLISH)
+    fun `Partial update of a country, as it exists`(): Unit = runBlocking {
+        val addCountryResponse = addCountryInDb(INPUT_COUNTRY)
 
-        Assertions.assertEquals(addLanguageResponse.status, HttpStatusCode.OK)
-        val addResultBody = addLanguageResponse.body<ResultResponse<LanguageModal.DTO>>()
-        Assertions.assertNotNull(addResultBody)
-        Assertions.assertEquals(LANGUAGE_ENGLISH, addResultBody.data.name)
+        val addResultBody = addCountryResponse.body<ResultResponse<CountryModal.DTO>>()
+        Assertions.assertEquals(INPUT_COUNTRY.code, addResultBody.data.code)
+
+        val changedRequestBody = INPUT_COUNTRY.copy(name ="United Arab Emirates")
+
+        val client = createHttpClient()
+        val editResponse = client.patch("$BASE_URL$ENDPOINT_COUNTRY/${addResultBody.data.id}") {
+            contentType(ContentType.Application.Json)
+            setBody(changedRequestBody)
+        }
+
+        val editResponseBody = editResponse.body<ResultResponse<Boolean>>()
+        Assertions.assertEquals(HttpStatusCode.OK.value, editResponseBody.statusCode)
+
+        Assertions.assertEquals(changedRequestBody.name, countryRepository.getCountry(addResultBody.data.id).name)
+    }
+
+    @Test
+    fun `Partial update of a country failed, for invalid country name`(): Unit = runBlocking {
+        val addCountryResponse = addCountryInDb(INPUT_COUNTRY)
+
+        val addResultBody = addCountryResponse.body<ResultResponse<CountryModal.DTO>>()
+        Assertions.assertEquals(INPUT_COUNTRY.code, addResultBody.data.code)
+
+        val changedRequestBody = INPUT_COUNTRY.copy(name = "    ")
+
+        val client = createHttpClient()
+        val editResponse = client.patch("$BASE_URL$ENDPOINT_COUNTRY/${addResultBody.data.id}") {
+            contentType(ContentType.Application.Json)
+            setBody(changedRequestBody)
+        }
+
+        val editResponseBody = editResponse.body<FailResponse>()
+        Assertions.assertEquals(HttpStatusCode.BadRequest.value, editResponseBody.statusCode)
+    }
+
+    @Test
+    fun `Partial update of a country got failed, as it didn't exists`(): Unit = runBlocking {
+        val countryId = 21
+
+        val client = createHttpClient()
+        val editResponse = client.patch("$BASE_URL$ENDPOINT_COUNTRY/$countryId") {
+            contentType(ContentType.Application.Json)
+            setBody(INPUT_COUNTRY)
+        }
+
+        val editBody = editResponse.body<FailResponse>()
+        Assertions.assertEquals(HttpStatusCode.BadRequest.value, editBody.statusCode)
+    }
+
+    @Test
+    fun `Delete country by ID, as it exists`(): Unit = runBlocking {
+        val addCountryResponse = addCountryInDb(INPUT_COUNTRY)
+
+        val addResultBody = addCountryResponse.body<ResultResponse<CountryModal.DTO>>()
+        Assertions.assertEquals(INPUT_COUNTRY.shortCode, addResultBody.data.shortCode)
 
         val client = createHttpClient()
         val deleteResponse = client.delete("$BASE_URL$ENDPOINT_COUNTRY/${addResultBody.data.id}")
 
-        Assertions.assertEquals(deleteResponse.status, HttpStatusCode.OK)
         val editBody = deleteResponse.body<ResultResponse<Boolean>>()
         Assertions.assertEquals(editBody.data, true)
         Assertions.assertEquals(editBody.statusCode, HttpStatusCode.OK.value)
 
-        Assertions.assertNull(languageRepository.language(addResultBody.data.id)?.name)
+        assertThrows<CountryNotFoundException> {
+            countryRepository.getCountry(addResultBody.data.id)
+        }
     }
 
     @Test
-    fun `Delete language from db by ID got failed, as it didn't exists`(): Unit = runBlocking {
-        val languageId = 21
+    fun `Delete country by ID got failed, as it didn't exists`(): Unit = runBlocking {
+        val countryId = 21
 
         val client = createHttpClient()
-        val deleteResponse = client.delete("$BASE_URL$ENDPOINT_COUNTRY/$languageId")
+        val deleteResponse = client.delete("$BASE_URL$ENDPOINT_COUNTRY/$countryId")
 
-        Assertions.assertEquals(deleteResponse.status, HttpStatusCode.OK)
-        val editBody = deleteResponse.body<ResultResponse<Boolean>>()
-        Assertions.assertEquals(editBody.statusCode, HttpStatusCode.OK.value)
-        Assertions.assertEquals(editBody.data, false)
-    }*/
+        val deleteBody = deleteResponse.body<FailResponse>()
+        Assertions.assertEquals(HttpStatusCode.BadRequest.value, deleteBody.statusCode)
+    }
 }
