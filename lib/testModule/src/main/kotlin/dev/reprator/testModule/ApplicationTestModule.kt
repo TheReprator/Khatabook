@@ -20,7 +20,7 @@ fun Application.configureCoreModule() {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             if (cause is StatusCodeException)
-                call.respond(FailResponse(HttpStatusCode.NoContent.value, cause.message.orEmpty()))
+                call.respond(FailResponse(cause.statusCode.value, cause.message.orEmpty()))
             else
                 call.respond(FailResponse(HttpStatusCode.InternalServerError.value, "500: ${cause.message}"))
         }

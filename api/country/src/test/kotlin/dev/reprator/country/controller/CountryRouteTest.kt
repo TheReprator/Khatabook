@@ -1,14 +1,13 @@
-package dev.reprator.language.controller
+package dev.reprator.country.controller
 
 import dev.reprator.core.DatabaseFactory
 import dev.reprator.core.FailResponse
 import dev.reprator.core.ResultResponse
-import dev.reprator.language.controller.ENDPOINT_LANGUAGE
-import dev.reprator.language.data.LanguageRepository
-import dev.reprator.language.data.TableLanguage
-import dev.reprator.language.modal.LanguageEntity
-import dev.reprator.language.modal.LanguageModal
-import dev.reprator.language.setUpKoinLanguage
+import dev.reprator.country.data.CountryRepository
+import dev.reprator.country.data.TableCountry
+import dev.reprator.country.modal.CountryEntity
+import dev.reprator.country.modal.CountryModal
+import dev.reprator.country.setUpKoinCountry
 import dev.reprator.testModule.KtorServerExtension
 import dev.reprator.testModule.KtorServerExtension.Companion.BASE_URL
 import dev.reprator.testModule.TestDatabaseFactory
@@ -39,19 +38,14 @@ import java.util.*
 @ExtendWith(KtorServerExtension::class)
 internal class LanguageRouteTest : KoinTest {
 
-    companion object {
-        const val LANGUAGE_ENGLISH = "English"
-        const val LANGUAGE_HINDI = "Hindi"
-    }
-
     private val databaseFactory by inject<DatabaseFactory>()
-    private val languageRepository by inject<LanguageRepository>()
+    private val countryRepository by inject<CountryRepository>()
 
     @JvmField
     @RegisterExtension
     val koinTestExtension = KoinTestExtension.create {
 
-        setUpKoinLanguage()
+        setUpKoinCountry()
 
         modules(
             module {
@@ -63,7 +57,7 @@ internal class LanguageRouteTest : KoinTest {
     fun clearDatabase() {
         databaseFactory.connect()
         transaction {
-            TableLanguage.deleteAll()
+            TableCountry.deleteAll()
         }
     }
 
@@ -72,26 +66,47 @@ internal class LanguageRouteTest : KoinTest {
         databaseFactory.close()
     }
 
-    private fun addLanguageInDb(languageName: String) = runBlocking {
+    private fun addCountryInDb(countryInfo: CountryEntity.DTO) = runBlocking {
         val client = createHttpClient()
-        client.post("$BASE_URL$ENDPOINT_LANGUAGE") {
-            setBody(languageName)
+        client.post("$BASE_URL$ENDPOINT_COUNTRY") {
+            contentType(ContentType.Application.Json)
+            setBody(countryInfo)
         }
     }
 
     @Test
-    fun `Add new language And Verify from db by id for existence`(): Unit = runBlocking {
-        val response = addLanguageInDb(LANGUAGE_ENGLISH)
+    fun `Add new country And Verify from db by id for existence`(): Unit = runBlocking {
+        val countryInput = CountryEntity.DTO("India",91, "In")
+        val response = addCountryInDb(countryInput)
 
         Assertions.assertEquals(response.status, HttpStatusCode.OK)
-        val resultBody = response.body<ResultResponse<LanguageModal.DTO>>()
+        val resultBody = response.body<ResultResponse<CountryModal.DTO>>()
         Assertions.assertNotNull(resultBody)
 
-        Assertions.assertEquals(languageRepository.language(resultBody.data.id)?.name, LANGUAGE_ENGLISH)
-        Assertions.assertEquals(resultBody.data.name, LANGUAGE_ENGLISH)
+        Assertions.assertEquals(countryInput.name, countryRepository.getCountry(resultBody.data.id).name)
+        Assertions.assertEquals(countryInput.name, resultBody.data.name)
     }
 
     @Test
+    fun `Failed to add new country, if country already exist`(): Unit = runBlocking {
+        val countryInput = CountryEntity.DTO("India",91, "In")
+        val addCountryResponse = addCountryInDb(countryInput)
+
+        Assertions.assertEquals(addCountryResponse.status, HttpStatusCode.OK)
+        val resultBody = addCountryResponse.body<ResultResponse<CountryModal.DTO>>()
+        Assertions.assertNotNull(resultBody)
+
+        Assertions.assertEquals(countryInput.name, countryRepository.getCountry(resultBody.data.id).name)
+        Assertions.assertEquals(countryInput.name, resultBody.data.name)
+
+        val addAgainEnglishLanguageResponse = addCountryInDb(countryInput)
+        Assertions.assertEquals(addAgainEnglishLanguageResponse.status, HttpStatusCode.OK)
+        val resultBodyAgain = addAgainEnglishLanguageResponse.body<FailResponse>()
+        Assertions.assertEquals(HttpStatusCode.BadRequest.value, resultBodyAgain.statusCode)
+        Assertions.assertNotNull(resultBodyAgain)
+    }
+
+  /*  @Test
     fun `Failed to add new language, if language already exist`(): Unit = runBlocking {
         val addEnglishLanguageResponse = addLanguageInDb(LANGUAGE_ENGLISH)
 
@@ -117,7 +132,7 @@ internal class LanguageRouteTest : KoinTest {
         }
 
         val client = createHttpClient()
-        val response = client.get("$BASE_URL$ENDPOINT_LANGUAGE")
+        val response = client.get("$BASE_URL$ENDPOINT_COUNTRY")
 
         Assertions.assertEquals(response.status, HttpStatusCode.OK)
         val resultBody = response.body<ResultResponse<List<LanguageModal.DTO>>>()
@@ -136,7 +151,7 @@ internal class LanguageRouteTest : KoinTest {
         Assertions.assertNotNull(addResultBody)
 
         val client = createHttpClient()
-        val findResponseSuccess = client.get("$BASE_URL$ENDPOINT_LANGUAGE/${addResultBody.data.id}")
+        val findResponseSuccess = client.get("$BASE_URL$ENDPOINT_COUNTRY/${addResultBody.data.id}")
 
         Assertions.assertEquals(findResponseSuccess.status, HttpStatusCode.OK)
         val findResultBody = findResponseSuccess.body<ResultResponse<LanguageModal.DTO>>()
@@ -149,11 +164,11 @@ internal class LanguageRouteTest : KoinTest {
         val languageId = 90
 
         val client = createHttpClient()
-        val findResponseSuccess = client.get("$BASE_URL$ENDPOINT_LANGUAGE/$languageId")
+        val findResponseSuccess = client.get("$BASE_URL$ENDPOINT_COUNTRY/$languageId")
 
         Assertions.assertEquals(findResponseSuccess.status, HttpStatusCode.OK)
         val findResultBody = findResponseSuccess.body<FailResponse>()
-        Assertions.assertEquals(HttpStatusCode.NotFound.value, findResultBody.statusCode)
+        Assertions.assertEquals(findResultBody.statusCode, HttpStatusCode.NoContent.value)
     }
 
     @Test
@@ -184,7 +199,7 @@ internal class LanguageRouteTest : KoinTest {
         val languageId = 21
 
         val client = createHttpClient()
-        val editResponse = client.patch("$BASE_URL$ENDPOINT_LANGUAGE") {
+        val editResponse = client.patch("$BASE_URL$ENDPOINT_COUNTRY") {
             contentType(ContentType.Application.Json)
             setBody(LanguageEntity.DTO(languageId, "vikram"))
         }
@@ -205,7 +220,7 @@ internal class LanguageRouteTest : KoinTest {
         Assertions.assertEquals(LANGUAGE_ENGLISH, addResultBody.data.name)
 
         val client = createHttpClient()
-        val deleteResponse = client.delete("$BASE_URL$ENDPOINT_LANGUAGE/${addResultBody.data.id}")
+        val deleteResponse = client.delete("$BASE_URL$ENDPOINT_COUNTRY/${addResultBody.data.id}")
 
         Assertions.assertEquals(deleteResponse.status, HttpStatusCode.OK)
         val editBody = deleteResponse.body<ResultResponse<Boolean>>()
@@ -220,11 +235,11 @@ internal class LanguageRouteTest : KoinTest {
         val languageId = 21
 
         val client = createHttpClient()
-        val deleteResponse = client.delete("$BASE_URL$ENDPOINT_LANGUAGE/$languageId")
+        val deleteResponse = client.delete("$BASE_URL$ENDPOINT_COUNTRY/$languageId")
 
         Assertions.assertEquals(deleteResponse.status, HttpStatusCode.OK)
         val editBody = deleteResponse.body<ResultResponse<Boolean>>()
         Assertions.assertEquals(editBody.statusCode, HttpStatusCode.OK.value)
         Assertions.assertEquals(editBody.data, false)
-    }
+    }*/
 }
