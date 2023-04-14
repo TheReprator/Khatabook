@@ -18,7 +18,7 @@ class LanguageFacadeImplTest : LanguageFacade {
     override suspend fun getLanguage(id: LanguageId): LanguageModal {
         return LANGUAGE_LIST.find {
             it.id == id
-        } ?: throw LanguageNotFoundException("Language didn't exist")
+        } ?: throw LanguageNotFoundException()
     }
 
     override suspend fun addNewLanguage(languageInfo: LanguageName): LanguageModal {
@@ -27,7 +27,7 @@ class LanguageFacadeImplTest : LanguageFacade {
         }
 
         if (null != languageExistenceCheck) {
-            throw IllegalLanguageException("Language already exist")
+            throw IllegalLanguageException()
         }
 
         val newLanguageModal = LanguageModal.DTO(3, languageInfo)
@@ -42,7 +42,7 @@ class LanguageFacadeImplTest : LanguageFacade {
         }
 
         if (-1 == languageIndex) {
-            throw IllegalLanguageException("Language didn't exist")
+            throw IllegalLanguageException()
         }
 
         val updatedLanguageModal = LanguageModal.DTO(languageInfo.id, languageInfo.name)
@@ -56,7 +56,7 @@ class LanguageFacadeImplTest : LanguageFacade {
         }
 
         if (-1 == languageIndex) {
-            throw IllegalLanguageException("Invalid language Id")
+            throw IllegalLanguageException()
         }
 
         LANGUAGE_LIST.removeAt(languageIndex)

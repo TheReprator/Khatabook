@@ -10,16 +10,12 @@ interface LanguageFacade {
     @Throws(LanguageEmptyException::class)
     suspend fun getAllLanguage(): Iterable<LanguageModal>
 
-    @Throws(LanguageNotFoundException::class)
     suspend fun getLanguage(id: LanguageId): LanguageModal
 
-    @Throws(IllegalLanguageException::class)
     suspend fun addNewLanguage(languageInfo: LanguageName): LanguageModal
 
-    @Throws(IllegalLanguageException::class)
     suspend fun editLanguage(languageId: LanguageId, languageInfo: LanguageEntity): Boolean
 
-    @Throws(IllegalLanguageException::class)
     suspend fun deleteLanguage(id: LanguageId): Boolean
 
 }
