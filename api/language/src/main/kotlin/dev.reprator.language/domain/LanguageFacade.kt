@@ -17,7 +17,7 @@ interface LanguageFacade {
     suspend fun addNewLanguage(languageInfo: LanguageName): LanguageModal
 
     @Throws(IllegalLanguageException::class)
-    suspend fun editLanguage(languageInfo: LanguageEntity): Boolean
+    suspend fun editLanguage(languageId: LanguageId, languageInfo: LanguageEntity): Boolean
 
     @Throws(IllegalLanguageException::class)
     suspend fun deleteLanguage(id: LanguageId): Boolean

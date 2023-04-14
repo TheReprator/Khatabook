@@ -77,7 +77,7 @@ class LanguageControllerTest {
     fun `Edit language, as it exist in list`(): Unit = runBlocking {
         val inputLanguage = LanguageEntity.DTO(1, "Chinese")
 
-        val response = languageController.editLanguage(inputLanguage)
+        val response = languageController.editLanguage(inputLanguage.id, inputLanguage)
 
         assertNotNull(response)
         assertEquals(true, response)
@@ -88,7 +88,7 @@ class LanguageControllerTest {
         val inputLanguage = LanguageEntity.DTO(12, "Arabic")
 
         assertThrows<IllegalLanguageException> {
-            languageController.editLanguage(inputLanguage)
+            languageController.editLanguage(inputLanguage.id, inputLanguage)
         }
     }
 

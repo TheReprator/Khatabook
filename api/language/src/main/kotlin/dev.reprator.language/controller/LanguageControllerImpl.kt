@@ -20,8 +20,8 @@ class LanguageControllerImpl(private val languageFacade: LanguageFacade) : Langu
         return languageFacade.addNewLanguage(languageInfo)
     }
 
-    override suspend fun editLanguage(languageInfo: LanguageEntity): Boolean {
-        return languageFacade.editLanguage(languageInfo)
+    override suspend fun editLanguage(languageId: LanguageId, languageInfo: LanguageEntity): Boolean {
+        return languageFacade.editLanguage(languageId, languageInfo)
     }
 
     override suspend fun deleteLanguage(id: LanguageId): Boolean {

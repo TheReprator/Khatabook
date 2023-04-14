@@ -13,12 +13,25 @@ interface LanguageEntity {
     data class DTO (
         override val id: LanguageId,
         override val name: LanguageName
-    ) : LanguageEntity, Validator<DTO> {
+    ) : LanguageEntity {
 
-        override fun validate(): DTO {
-            TODO("Not yet implemented")
+        companion object {
+            fun Map<String, String>?.mapToModal(): DTO = object: Validator<DTO> {
+
+                val data = this@mapToModal ?: throw IllegalLanguageException()
+
+                val name:String by data.withDefault { "" }
+
+                override fun validate(): DTO {
+
+                    if(name.isNotEmpty())
+                        name.validateLanguageName()
+
+                    return DTO(0, name)
+                }
+
+            }.validate()
         }
-
     }
 }
 

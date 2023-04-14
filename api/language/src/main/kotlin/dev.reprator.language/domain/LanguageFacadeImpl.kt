@@ -15,15 +15,15 @@ class LanguageFacadeImpl(private val repository: LanguageRepository): LanguageFa
     }
 
     override suspend fun getLanguage(id: LanguageId): LanguageModal {
-        return repository.language(id) ?: throw LanguageNotFoundException()
+        return repository.language(id)
     }
 
     override suspend fun addNewLanguage(languageInfo: LanguageName): LanguageModal {
-        return repository.addNewLanguage(languageInfo) ?: throw IllegalLanguageException("Language already exist")
+        return repository.addNewLanguage(languageInfo)
     }
 
-    override suspend fun editLanguage(languageInfo: LanguageEntity): Boolean {
-        return repository.editLanguage(languageInfo.id, languageInfo.name)
+    override suspend fun editLanguage(languageId: LanguageId, languageInfo: LanguageEntity): Boolean {
+        return repository.editLanguage(languageId, languageInfo.name)
     }
 
     override suspend fun deleteLanguage(id: LanguageId): Boolean {

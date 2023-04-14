@@ -36,7 +36,7 @@ class LanguageFacadeImplTest : LanguageFacade {
         return newLanguageModal
     }
 
-    override suspend fun editLanguage(languageInfo: LanguageEntity): Boolean {
+    override suspend fun editLanguage(languageId: LanguageId, languageInfo: LanguageEntity): Boolean {
         val languageIndex = LANGUAGE_LIST.indexOfFirst {
             it.id == languageInfo.id
         }

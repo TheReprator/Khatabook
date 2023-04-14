@@ -7,9 +7,9 @@ interface LanguageRepository {
 
     suspend fun allLanguage(): List<LanguageModal>
 
-    suspend fun language(id: Int): LanguageModal?
+    suspend fun language(id: Int): LanguageModal
 
-    suspend fun addNewLanguage(name: String): LanguageModal?
+    suspend fun addNewLanguage(name: String): LanguageModal
 
     suspend fun editLanguage(id: Int, name: String): Boolean
 

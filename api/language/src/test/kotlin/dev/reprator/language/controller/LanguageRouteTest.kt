@@ -6,6 +6,7 @@ import dev.reprator.core.ResultResponse
 import dev.reprator.language.controller.ENDPOINT_LANGUAGE
 import dev.reprator.language.data.LanguageRepository
 import dev.reprator.language.data.TableLanguage
+import dev.reprator.language.domain.LanguageNotFoundException
 import dev.reprator.language.modal.LanguageEntity
 import dev.reprator.language.modal.LanguageModal
 import dev.reprator.language.setUpKoinLanguage
@@ -161,22 +162,20 @@ internal class LanguageRouteTest : KoinTest {
         val addLanguageResponse = addLanguageInDb(LANGUAGE_ENGLISH)
 
         val editLanguage = "Khatabook"
-        Assertions.assertEquals(addLanguageResponse.status, HttpStatusCode.OK)
         val addResultBody = addLanguageResponse.body<ResultResponse<LanguageModal.DTO>>()
         Assertions.assertNotNull(addResultBody)
         Assertions.assertEquals(LANGUAGE_ENGLISH, addResultBody.data.name)
 
         val client = createHttpClient()
-        val editResponse = client.patch("$BASE_URL$ENDPOINT_LANGUAGE") {
+        val editResponse = client.patch("$BASE_URL$ENDPOINT_LANGUAGE/${addResultBody.data.id}") {
             contentType(ContentType.Application.Json)
             setBody(LanguageEntity.DTO(addResultBody.data.id, editLanguage))
         }
 
-        Assertions.assertEquals(editResponse.status, HttpStatusCode.OK)
         val editBody = editResponse.body<ResultResponse<Boolean>>()
-        Assertions.assertEquals(editBody.statusCode, HttpStatusCode.OK.value)
+        Assertions.assertEquals(HttpStatusCode.OK.value, editBody.statusCode)
 
-        Assertions.assertEquals(languageRepository.language(addResultBody.data.id)?.name, editLanguage)
+        Assertions.assertEquals(editLanguage, languageRepository.language(addResultBody.data.id).name)
     }
 
     @Test
@@ -184,7 +183,7 @@ internal class LanguageRouteTest : KoinTest {
         val languageId = 21
 
         val client = createHttpClient()
-        val editResponse = client.patch("$BASE_URL$ENDPOINT_LANGUAGE") {
+        val editResponse = client.patch("$BASE_URL$ENDPOINT_LANGUAGE/$languageId") {
             contentType(ContentType.Application.Json)
             setBody(LanguageEntity.DTO(languageId, "vikram"))
         }
@@ -199,7 +198,6 @@ internal class LanguageRouteTest : KoinTest {
     fun `Delete language from db by ID, as it exists`(): Unit = runBlocking {
         val addLanguageResponse = addLanguageInDb(LANGUAGE_ENGLISH)
 
-        Assertions.assertEquals(addLanguageResponse.status, HttpStatusCode.OK)
         val addResultBody = addLanguageResponse.body<ResultResponse<LanguageModal.DTO>>()
         Assertions.assertNotNull(addResultBody)
         Assertions.assertEquals(LANGUAGE_ENGLISH, addResultBody.data.name)
@@ -207,12 +205,13 @@ internal class LanguageRouteTest : KoinTest {
         val client = createHttpClient()
         val deleteResponse = client.delete("$BASE_URL$ENDPOINT_LANGUAGE/${addResultBody.data.id}")
 
-        Assertions.assertEquals(deleteResponse.status, HttpStatusCode.OK)
         val editBody = deleteResponse.body<ResultResponse<Boolean>>()
         Assertions.assertEquals(editBody.data, true)
-        Assertions.assertEquals(editBody.statusCode, HttpStatusCode.OK.value)
+        Assertions.assertEquals(HttpStatusCode.OK.value, editBody.statusCode)
 
-        Assertions.assertNull(languageRepository.language(addResultBody.data.id)?.name)
+        assertThrows<LanguageNotFoundException> {
+            languageRepository.language(addResultBody.data.id)
+        }
     }
 
     @Test
@@ -224,7 +223,7 @@ internal class LanguageRouteTest : KoinTest {
 
         Assertions.assertEquals(deleteResponse.status, HttpStatusCode.OK)
         val editBody = deleteResponse.body<ResultResponse<Boolean>>()
-        Assertions.assertEquals(editBody.statusCode, HttpStatusCode.OK.value)
+        Assertions.assertEquals(HttpStatusCode.OK.value, editBody.statusCode)
         Assertions.assertEquals(editBody.data, false)
     }
 }
