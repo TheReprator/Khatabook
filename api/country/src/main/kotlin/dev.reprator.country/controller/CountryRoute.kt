@@ -46,7 +46,7 @@ fun Routing.routeCountry() {
 
         patch ("{$INPUT_COUNTRY_ID}") {
             val countryId = call.parameters[INPUT_COUNTRY_ID].validateCountryIsoCode()
-            val countryInfo = call.receiveNullable<Map<String?, String?>>().from()
+            val countryInfo = call.receiveNullable<Map<String, String>>().from()
 
             call.respond(ResultResponse(HttpStatusCode.OK.value, countryFacade.editCountry(countryId, countryInfo)))
         }

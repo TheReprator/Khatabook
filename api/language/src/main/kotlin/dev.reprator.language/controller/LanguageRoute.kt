@@ -3,6 +3,8 @@ package dev.reprator.language.controller
 import dev.reprator.core.ResultResponse
 import dev.reprator.core.exception.StatusCodeException
 import dev.reprator.language.modal.LanguageEntity
+import dev.reprator.language.modal.validateLanguageId
+import dev.reprator.language.modal.validateLanguageName
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -23,17 +25,13 @@ fun Routing.routeLanguage() {
         }
 
         get("{$INPUT_LANGUAGE_ID}") {
-            val languageId = call.parameters[INPUT_LANGUAGE_ID]?.toIntOrNull() ?: throw StatusCodeException.BadRequest(
-                message = "Enter valid language id"
-            )
+            val languageId = call.parameters[INPUT_LANGUAGE_ID].validateLanguageId()
             call.respond(ResultResponse(HttpStatusCode.OK.value, controller.getLanguage(languageId)))
         }
 
         post {
             val languageName: String =
-                call.receiveNullable<String>() ?: throw StatusCodeException.BadRequest(message = "Enter valid language")
-            if(languageName.isEmpty() || languageName.length < 3)
-                throw StatusCodeException.BadRequest(message = "Enter valid language")
+                call.receiveNullable<String>().validateLanguageName()
             call.respond(ResultResponse(HttpStatusCode.Created.value, controller.addNewLanguage(languageName)))
         }
 
@@ -42,10 +40,14 @@ fun Routing.routeLanguage() {
             call.respond(ResultResponse(HttpStatusCode.OK.value, controller.editLanguage(languageInfo)))
         }
 
+       /* patch("{$INPUT_LANGUAGE_ID}") {
+            val languageId = call.parameters[INPUT_LANGUAGE_ID].validateLanguageId()
+            val languageInfo = call.receiveNullable<LanguageEntity.DTO>() ?: throw StatusCodeException.BadRequest(message = "Enter valid data")
+            call.respond(ResultResponse(HttpStatusCode.OK.value, controller.editLanguage(languageInfo)))
+        }*/
+
         delete("{$INPUT_LANGUAGE_ID}") {
-            val languageId = call.parameters[INPUT_LANGUAGE_ID]?.toIntOrNull() ?: throw StatusCodeException.BadRequest(
-                message = "Enter valid language id"
-            )
+            val languageId = call.parameters[INPUT_LANGUAGE_ID].validateLanguageId()
             call.respond(ResultResponse(HttpStatusCode.OK.value, controller.deleteLanguage(languageId)))
         }
     }

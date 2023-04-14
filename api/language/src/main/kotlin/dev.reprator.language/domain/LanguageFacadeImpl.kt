@@ -10,12 +10,12 @@ class LanguageFacadeImpl(private val repository: LanguageRepository): LanguageFa
 
     override suspend fun getAllLanguage(): Iterable<LanguageModal> {
         return repository.allLanguage().ifEmpty {
-            throw LanguageEmptyException("No Language found")
+            throw LanguageEmptyException()
         }
     }
 
     override suspend fun getLanguage(id: LanguageId): LanguageModal {
-        return repository.language(id) ?: throw LanguageNotFoundException("No Language found")
+        return repository.language(id) ?: throw LanguageNotFoundException()
     }
 
     override suspend fun addNewLanguage(languageInfo: LanguageName): LanguageModal {

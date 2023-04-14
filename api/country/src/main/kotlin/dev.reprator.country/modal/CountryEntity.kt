@@ -14,7 +14,7 @@ interface CountryEntity {
     val shortCode: CountryShortCode
 
     companion object {
-        fun Map<String?, String?>?.from(): DTO = object {
+        fun Map<String, String>?.from(): DTO = object {
 
             val data = this@from ?: throw IllegalCountryException()
 
