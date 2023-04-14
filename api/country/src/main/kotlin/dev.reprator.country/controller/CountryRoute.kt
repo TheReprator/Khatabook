@@ -4,10 +4,9 @@ import dev.reprator.core.ResultResponse
 import dev.reprator.country.domain.CountryFacade
 import dev.reprator.country.domain.IllegalCountryException
 import dev.reprator.country.modal.CountryEntity
-import dev.reprator.country.modal.CountryEntity.Companion.from
+import dev.reprator.country.modal.CountryEntity.Companion.mapToModal
 import dev.reprator.country.modal.validateCountryIsoCode
 import io.ktor.http.*
-import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -46,7 +45,7 @@ fun Routing.routeCountry() {
 
         patch ("{$INPUT_COUNTRY_ID}") {
             val countryId = call.parameters[INPUT_COUNTRY_ID].validateCountryIsoCode()
-            val countryInfo = call.receiveNullable<Map<String, String>>().from()
+            val countryInfo = call.receiveNullable<Map<String, String>>().mapToModal()
 
             call.respond(ResultResponse(HttpStatusCode.OK.value, countryFacade.editCountry(countryId, countryInfo)))
         }

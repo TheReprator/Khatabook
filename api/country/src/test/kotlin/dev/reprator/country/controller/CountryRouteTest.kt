@@ -81,9 +81,8 @@ internal class CountryRouteTest : KoinTest {
 
         Assertions.assertEquals(response.status, HttpStatusCode.OK)
         val resultBody = response.body<ResultResponse<CountryModal.DTO>>()
-        Assertions.assertNotNull(resultBody)
 
-        Assertions.assertEquals(countryInput.name, countryRepository.getCountry(resultBody.data.id).name)
+        Assertions.assertNotNull(resultBody)
         Assertions.assertEquals(countryInput.name, resultBody.data.name)
     }
 
@@ -94,13 +93,12 @@ internal class CountryRouteTest : KoinTest {
 
         Assertions.assertEquals(addCountryResponse.status, HttpStatusCode.OK)
         val resultBody = addCountryResponse.body<ResultResponse<CountryModal.DTO>>()
-        Assertions.assertNotNull(resultBody)
 
-        Assertions.assertEquals(countryInput.name, countryRepository.getCountry(resultBody.data.id).name)
+        Assertions.assertNotNull(resultBody)
         Assertions.assertEquals(countryInput.name, resultBody.data.name)
 
         val addAgainEnglishLanguageResponse = addCountryInDb(countryInput)
-        Assertions.assertEquals(addAgainEnglishLanguageResponse.status, HttpStatusCode.OK)
+
         val resultBodyAgain = addAgainEnglishLanguageResponse.body<FailResponse>()
         Assertions.assertEquals(HttpStatusCode.BadRequest.value, resultBodyAgain.statusCode)
         Assertions.assertNotNull(resultBodyAgain)

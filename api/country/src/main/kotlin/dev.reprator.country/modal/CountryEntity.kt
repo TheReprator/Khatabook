@@ -14,16 +14,28 @@ interface CountryEntity {
     val shortCode: CountryShortCode
 
     companion object {
-        fun Map<String, String>?.from(): DTO = object {
+        fun Map<String, String>?.mapToModal(): DTO = object: Validator<DTO> {
 
-            val data = this@from ?: throw IllegalCountryException()
+            val data = this@mapToModal ?: throw IllegalCountryException()
 
             val name:String by data.withDefault { "" }
             val code: String by data.withDefault { "0" }
             val shortCode:String by data.withDefault { "" }
 
-            val mappedData = DTO(name, code.toInt(), shortCode)
-        }.mappedData
+            override fun validate(): DTO {
+                if(name.isNotEmpty())
+                    validateCountryName(name)
+
+                if(shortCode.isNotEmpty())
+                    validateCountryShortCode(shortCode)
+
+                if(0 != code.toInt())
+                    code.validateCountryIsoCode()
+
+                return DTO(name, code.toInt(), shortCode)
+            }
+
+        }.validate()
     }
 
     data class DTO (
