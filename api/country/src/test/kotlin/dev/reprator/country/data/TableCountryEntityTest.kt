@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -31,11 +32,24 @@ import java.util.stream.Stream
 internal class TableCountryEntityTest : KoinTest {
 
     companion object {
+
         @JvmStatic
-        fun notUniqueItemsInput() = Stream.of(
+        fun inValidUpdateCountryInput() = Stream.of(
+            Arguments.of(CountryEntity.DTO("123", 91, "IN")),
+        )
+
+        @JvmStatic
+        fun validUpdateCountryInput() = Stream.of(
+            Arguments.of(CountryEntity.DTO("India", 91, "UAE")),
+            Arguments.of(CountryEntity.DTO("India", 971, "IN")),
+            Arguments.of(CountryEntity.DTO("United Arab Emirate", 91, "IN")),
+            Arguments.of(CountryEntity.DTO("United Arab Emirate", 91, "IN")),
             Arguments.of(CountryEntity.DTO("India", 91, "IN")),
-            Arguments.of(CountryEntity.DTO("United Arab Emirate", 91, "UAE")),
-            Arguments.of(CountryEntity.DTO("United Arab Emirate", 971, "IN")),
+            Arguments.of(CountryEntity.DTO("", 91, "IN")),
+            Arguments.of(CountryEntity.DTO("  ", 91, "IN")),
+            Arguments.of(CountryEntity.DTO("dddf", 91, "IN")),
+            Arguments.of(CountryEntity.DTO("India", -1, "IN")),
+            Arguments.of(CountryEntity.DTO("India", 91, "")),
         )
 
         @JvmStatic
@@ -182,7 +196,7 @@ internal class TableCountryEntityTest : KoinTest {
     }
 
     @ParameterizedTest
-    @MethodSource("notUniqueItemsInput")
+    @MethodSource("validCountryInput")
     fun `Failed to add, if shortCode, name, iso code is not unique`(
         inputCountry: CountryEntity.DTO
     ) {
@@ -200,6 +214,65 @@ internal class TableCountryEntityTest : KoinTest {
                     name = inputCountry.name
                     shortcode = inputCountry.shortCode
                     isocode = inputCountry.code
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("validUpdateCountryInput")
+    fun `update country by id`( countryInfo: CountryEntity.DTO) {
+        val inputCountry = CountryEntity.DTO("India", 91, "IN")
+
+        val insertedCountry = transaction {
+            TableCountryEntity.new {
+                name = inputCountry.name
+                shortcode = inputCountry.shortCode
+                isocode = inputCountry.code
+            }
+        }
+
+        assertEquals(inputCountry.code, insertedCountry.isocode)
+
+        val updateCountry = transaction {
+
+            TableCountry.update({ TableCountry.id eq insertedCountry.id }) {
+                if (countryInfo.name.isNotBlank())
+                    it[name] = countryInfo.name.trimStart()
+                if (countryInfo.shortCode.isNotBlank())
+                    it[shortcode] = countryInfo.shortCode.trimStart()
+                if (0 < countryInfo.code)
+                    it[isocode] = countryInfo.code
+            }
+        }
+
+        assertEquals(1, updateCountry)
+    }
+
+    @ParameterizedTest
+    @MethodSource("inValidUpdateCountryInput")
+    fun `failed to update country by id, due to invalid inputs`( countryInfo: CountryEntity.DTO) {
+        val inputCountry = CountryEntity.DTO("India", 91, "IN")
+
+        val insertedCountry = transaction {
+            TableCountryEntity.new {
+                name = inputCountry.name
+                shortcode = inputCountry.shortCode
+                isocode = inputCountry.code
+            }
+        }
+
+        assertEquals(inputCountry.code, insertedCountry.isocode)
+
+        assertThrows<ExposedSQLException> {
+            transaction {
+                TableCountry.update({ TableCountry.id eq insertedCountry.id }) {
+                    if (countryInfo.name.isNotBlank())
+                        it[name] = countryInfo.name.trimStart()
+                    if (countryInfo.shortCode.isNotBlank())
+                        it[shortcode] = countryInfo.shortCode.trimStart()
+                    if (0 < countryInfo.code)
+                        it[isocode] = countryInfo.code
                 }
             }
         }
