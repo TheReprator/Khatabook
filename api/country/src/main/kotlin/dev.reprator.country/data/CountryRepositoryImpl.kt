@@ -34,8 +34,8 @@ class CountryRepositoryImpl(private val mapper: Mapper<TableCountryEntity, Count
             throw IllegalCountryException()
 
         val newCountry = TableCountryEntity.new {
-            name = countryInfo.name
-            shortcode = countryInfo.shortCode
+            name = countryInfo.name.trimStart()
+            shortcode = countryInfo.shortCode.trimStart()
             isocode = countryInfo.code
         }
         resultRowToCountry(newCountry)
@@ -46,11 +46,11 @@ class CountryRepositoryImpl(private val mapper: Mapper<TableCountryEntity, Count
 
         TableCountry.update({ TableCountry.id eq countryId }) {
             if(countryInfo.name.isNotBlank())
-                it[TableCountry.name] = countryInfo.name
+                it[name] = countryInfo.name.trimStart()
             if(countryInfo.shortCode.isNotBlank())
-                it[TableCountry.shortcode] = countryInfo.shortCode
+                it[shortcode] = countryInfo.shortCode.trimStart()
             if(0 < countryInfo.code)
-                it[TableCountry.isocode] = countryInfo.code
+                it[isocode] = countryInfo.code
         } > 0
     }
 

@@ -66,7 +66,7 @@ internal class CountryRouteTest : KoinTest {
         }
     }
 
-    @AfterAll
+    @AfterEach
     fun closeDataBase() {
         databaseFactory.close()
     }

@@ -3,7 +3,6 @@ package dev.reprator.language.controller
 import dev.reprator.core.DatabaseFactory
 import dev.reprator.core.FailResponse
 import dev.reprator.core.ResultResponse
-import dev.reprator.language.controller.ENDPOINT_LANGUAGE
 import dev.reprator.language.data.LanguageRepository
 import dev.reprator.language.data.TableLanguage
 import dev.reprator.language.domain.LanguageNotFoundException
@@ -68,7 +67,7 @@ internal class LanguageRouteTest : KoinTest {
         }
     }
 
-    @AfterAll
+    @AfterEach
     fun closeDataBase() {
         databaseFactory.close()
     }
