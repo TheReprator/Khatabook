@@ -8,6 +8,7 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import dev.reprator.plugins.*
+import dev.reprator.user.setUpKoinUser
 import org.koin.core.parameter.parametersOf
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
@@ -23,6 +24,7 @@ fun Application.module() {
         modules(koinAppModule)
         setUpKoinLanguage()
         setUpKoinCountry()
+        setUpKoinUser()
     }
 
     val databaseFactory : DatabaseFactory by inject { parametersOf(environment.config.setupApplicationConfiguration()) }

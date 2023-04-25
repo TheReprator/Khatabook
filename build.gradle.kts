@@ -14,6 +14,7 @@ dependencies {
     implementation(project("api:language"))
     implementation(project("api:splash"))
     implementation(project("api:country"))
+    implementation(project("api:user"))
 
     implementation(libs.ktor.server.common)
     implementation(libs.ktor.server.status.page)
