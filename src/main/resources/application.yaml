@@ -14,7 +14,7 @@ storage:
   portNumber: "$DATABASE_PORT:5432"
   serverName: "$DATABASE_SERVER_NAME:localhost"
   userName: "$DATABASE_USERNAME:postgres"
-  password: "DATABASE_PASSWORD:vikram90#"
+  password: "$DATABASE_PASSWORD:vikram90#"
 
 jwt:
   secret: "secret"
