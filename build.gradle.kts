@@ -1,6 +1,9 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin("jvm") version libs.versions.kotlin
     alias(libs.plugins.ktor)
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "dev.reprator"
@@ -34,6 +37,26 @@ dependencies {
     // testing
     testImplementation(project(":lib:testModule"))
     testImplementation(libs.test.ktor.server)
+}
+
+tasks {
+
+    val shadowJarTask = named<ShadowJar>("shadowJar") {
+        archiveFileName.set("khatabook-0-0-1-with-dependencies.jar")
+        mergeServiceFiles()
+
+        manifest {
+            attributes(mapOf("Main-Class" to application.mainClass.get()))
+        }
+    }
+
+    named("jar") {
+        enabled = false
+    }
+
+    named("assemble") {
+        dependsOn(shadowJarTask)
+    }
 }
 
 tasks.test {
