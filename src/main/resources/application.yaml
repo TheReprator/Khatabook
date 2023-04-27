@@ -13,7 +13,8 @@ storage:
   databaseName: "khatabook"
   portNumber: 5432
   serverName: localhost
-  ehcacheFilePath: build/ehcache
+  userName: postgres
+  password: "vikram90#"
 
 jwt:
   secret: "secret"
