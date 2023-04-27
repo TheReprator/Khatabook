@@ -1,7 +1,7 @@
 ktor:
   development: true
   deployment:
-    port: "$APP_PORT:8080"
+    port: "$PORT:8080"
     shutdown:
       url: "/shutdown"
   application:
