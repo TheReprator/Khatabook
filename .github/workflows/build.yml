@@ -29,7 +29,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle compile and Run tests
-        run: gradlew clean test
+        run: ./gradlew clean test
 
       - name: Report on tests
         uses: dorny/test-reporter@v1
