@@ -8,6 +8,7 @@ import dev.reprator.country.controller.routeCountry
 import dev.reprator.language.controller.routeLanguage
 import dev.reprator.splash.controller.routeSplash
 import dev.reprator.splash.setUpSplashFolder
+import dev.reprator.user.controller.routeUser
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.plugins.statuspages.*
@@ -37,5 +38,6 @@ fun Application.configureRouting() {
         routeSplash(environment?.config?.setUpSplashFolder())
         routeLanguage()
         routeCountry()
+        routeUser()
     }
 }
