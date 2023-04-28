@@ -51,6 +51,7 @@ ktor {
 }
 
 tasks {
+
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "${JavaVersion.VERSION_17}"
@@ -63,4 +64,5 @@ tasks {
             events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
         }
     }
+
 }
