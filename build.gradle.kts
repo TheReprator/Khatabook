@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     kotlin("jvm") version libs.versions.kotlin
     alias(libs.plugins.ktor)
@@ -10,11 +13,16 @@ application {
     mainClass.set("io.ktor.server.netty.EngineMain")
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 dependencies {
-    implementation(project("api:language"))
-    implementation(project("api:splash"))
-    implementation(project("api:country"))
-    implementation(project("api:user"))
+    implementation(projects.api.language)
+    implementation(projects.api.splash)
+    implementation(projects.api.country)
+    implementation(projects.api.user)
 
     implementation(libs.ktor.server.common)
     implementation(libs.ktor.server.status.page)
@@ -33,11 +41,27 @@ dependencies {
     implementation(libs.koin.logger)
 
     // testing
-    testImplementation(project(":lib:testModule"))
+    testImplementation(projects.lib.testModule)
     testImplementation(libs.test.ktor.server)
 }
 
-tasks.test {
-    // Use the built-in JUnit support of Gradle.
-    useJUnitPlatform()
+ktor {
+    fatJar {
+        archiveFileName.set("fat.jar")
+    }
+}
+
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "${JavaVersion.VERSION_17}"
+        }
+    }
+
+    withType<Test> {
+        useJUnitPlatform()
+        testLogging {
+            events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+        }
+    }
 }

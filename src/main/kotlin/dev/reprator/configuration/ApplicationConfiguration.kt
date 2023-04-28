@@ -9,7 +9,9 @@ fun ApplicationConfig.setupApplicationConfiguration(): AppDBConfiguration {
     val database = this.property("storage.databaseName").getString()
     val port = this.property("storage.portNumber").getString().toInt()
     val server = this.property("storage.serverName").getString()
+    val userName = this.property("storage.userName").getString()
+    val password = this.property("storage.password").getString()
 
-    val appConfig = AppDBConfiguration(DatabaseConfig(driverClass, database, port, server))
+    val appConfig = AppDBConfiguration(DatabaseConfig(driverClass, database, port, server, userName, password))
     return appConfig
 }

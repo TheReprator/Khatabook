@@ -1,5 +1,12 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version libs.versions.kotlin
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
@@ -7,7 +14,7 @@ dependencies {
     api(libs.exposed.core)
 
     // testing
-    api(project(mapOf("path" to ":lib:core")))
+    api(projects.lib.core)
     api(libs.test.junit5)
     api(libs.test.junit5.suite)
     api(libs.test.junit5.runtime)
@@ -28,4 +35,12 @@ dependencies {
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.hikariCp)
     implementation(libs.exposed.h2Db)
+}
+
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "${JavaVersion.VERSION_17}"
+        }
+    }
 }

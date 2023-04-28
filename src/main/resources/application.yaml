@@ -1,7 +1,7 @@
 ktor:
   development: true
   deployment:
-    port: 8080
+    port: "$PORT:8080"
     shutdown:
       url: "/shutdown"
   application:
@@ -10,10 +10,11 @@ ktor:
 
 storage:
   driverClassName: "org.postgresql.Driver"
-  databaseName: "khatabook"
-  portNumber: 5432
-  serverName: localhost
-  ehcacheFilePath: build/ehcache
+  databaseName: "$DATABASE_NAME:khatabook"
+  portNumber: "$DATABASE_PORT:5432"
+  serverName: "$DATABASE_SERVER_NAME:localhost"
+  userName: "$DATABASE_USERNAME:postgres"
+  password: "$DATABASE_PASSWORD:vikram90#"
 
 jwt:
   secret: "secret"

@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS language
+(
+    id SERIAL PRIMARY KEY ,
+    name text NOT NULL UNIQUE
+)
+
+
+
