@@ -30,11 +30,3 @@ jobs:
 
       - name: Gradle compile and Run tests
         run: ./gradlew clean test
-
-      - name: Report on tests
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
-        with:
-          name: Test results
-          path: build/test-results/*.xml
-          reporter: java-junit
