@@ -1,9 +1,9 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     kotlin("jvm") version libs.versions.kotlin
     alias(libs.plugins.ktor)
-    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "dev.reprator"
@@ -11,6 +11,11 @@ version = "0.0.1"
 
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
@@ -39,27 +44,23 @@ dependencies {
     testImplementation(libs.test.ktor.server)
 }
 
-tasks {
-
-    val shadowJarTask = named<ShadowJar>("shadowJar") {
-        archiveFileName.set("khatabook-0-0-1-with-dependencies.jar")
-        mergeServiceFiles()
-
-        manifest {
-            attributes(mapOf("Main-Class" to application.mainClass.get()))
-        }
-    }
-
-    named("jar") {
-        enabled = false
-    }
-
-    named("assemble") {
-        dependsOn(shadowJarTask)
+ktor {
+    fatJar {
+        archiveFileName.set("fat.jar")
     }
 }
 
-tasks.test {
-    // Use the built-in JUnit support of Gradle.
-    useJUnitPlatform()
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "${JavaVersion.VERSION_17}"
+        }
+    }
+
+    withType<Test> {
+        useJUnitPlatform()
+        testLogging {
+            events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+        }
+    }
 }
