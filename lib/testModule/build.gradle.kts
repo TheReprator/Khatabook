@@ -14,7 +14,7 @@ dependencies {
     api(libs.exposed.core)
 
     // testing
-    api(project(mapOf("path" to ":lib:core")))
+    api(projects.lib.core)
     api(libs.test.junit5)
     api(libs.test.junit5.suite)
     api(libs.test.junit5.runtime)
