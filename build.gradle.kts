@@ -23,6 +23,7 @@ dependencies {
     implementation(project("api:splash"))
     implementation(project("api:country"))
 
+    implementation(libs.ktor.server.cors)
     implementation(libs.ktor.server.common)
     implementation(libs.ktor.server.status.page)
     implementation(libs.ktor.server.logging)

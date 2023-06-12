@@ -10,6 +10,7 @@ junit5 = "5.9.2"
 [libraries]
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
 ktor-server-common = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor" }
 ktor-server-status-page = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktor-server-logging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }

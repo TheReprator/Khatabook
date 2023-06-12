@@ -8,6 +8,8 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import dev.reprator.plugins.*
+import io.ktor.http.*
+import io.ktor.server.plugins.cors.routing.*
 import org.koin.core.parameter.parametersOf
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
@@ -23,6 +25,22 @@ fun Application.module() {
         modules(koinAppModule)
         setUpKoinLanguage()
         setUpKoinCountry()
+    }
+
+    install(CORS) {
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Get)
+        allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Delete)
+        allowMethod(HttpMethod.Patch)
+        allowHeader(HttpHeaders.Authorization)
+        allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        // header("any header") if you want to add any header
+        allowCredentials = true
+        allowNonSimpleContentTypes = true
+        anyHost()
     }
 
     val databaseFactory : DatabaseFactory by inject { parametersOf(environment.config.setupApplicationConfiguration()) }
