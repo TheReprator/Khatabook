@@ -12,7 +12,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Khatabook"
+rootProject.name = "AccountBook"
 
 include(":lib:testModule")
 include(":lib:core")
